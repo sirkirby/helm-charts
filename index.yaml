@@ -1,0 +1,20 @@
+apiVersion: v1
+entries:
+  scrypted:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2023-12-05T19:29:13.583912652Z"
+    description: A Helm chart for deploying Scrypted (scrypted.app) on Kubernetes
+    digest: d54a61316498b57496b8efa648baac3782f788a36983ebd4a549e1d9bd5e3dbe
+    home: https://github.com/sirkirby/helm-charts
+    icon: https://www.scrypted.app/images/web_hi_res_512.png
+    maintainers:
+    - email: oss@chriskirby.net
+      name: sirkirby
+      url: https://chriskirby.net
+    name: scrypted
+    type: application
+    urls:
+    - https://github.com/sirkirby/helm-charts/releases/download/scrypted-1.0.0/scrypted-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-12-05T19:29:13.583958768Z"
