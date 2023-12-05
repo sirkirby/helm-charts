@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scrypted.fullname" . }}
+  labels:
+    {{- include "scrypted.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "scrypted.selectorLabels" . | nindent 6 }}
+      {{- if .Values.podLabels }}
+        {{- toYaml .Values.podLabels | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "scrypted.selectorLabels" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+          {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
+    spec:
+      affinity:
+        {{- if .Values.nodeAffinity }}
+          {{- toYaml .Values.nodeAffinity | nindent 8 }}
+        {{- end }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: SCRYPTED_SECURE_PORT
+          value: "{{ .Values.env.securePort }}"
+        - name: SCRYPTED_INSECURE_PORT
+          value: "{{ .Values.env.insecurePort }}"
+        - name: TZ
+          value: "{{ .Values.env.timezone }}"
+        ports:
+        - containerPort: {{ .Values.env.insecurePort }}
+          protocol: TCP
+          name: insecure
+        - containerPort: {{ .Values.env.securePort }}
+          protocol: TCP
+          name: secure
+        volumeMounts:
+        - name: scrypted-persistent-storage
+          mountPath: /server/volume
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.env.insecurePort }}
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds}}
+        {{- end }}
+      volumes:
+      - name: scrypted-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ include "scrypted.fullname" . }}-pvc

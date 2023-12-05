@@ -1,0 +1,12 @@
+apiVersion: v2
+name: "scrypted"
+description: "A Helm chart for deploying Scrypted (scrypted.app) on Kubernetes"
+home: "https://github.com/sirkirby/helm-charts"
+type: application
+version: "1.0.0"
+appVersion: "latest"
+icon: "https://www.scrypted.app/images/web_hi_res_512.png"
+maintainers:
+  - name: "sirkirby"
+    email: "oss@chriskirby.net"
+    url: "https://chriskirby.net"

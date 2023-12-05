@@ -1,0 +1,65 @@
+image:
+  repository: koush/scrypted
+  tag: latest
+  pullPolicy: Always
+
+env:
+  securePort: 9443
+  insecurePort: 11080
+  timezone: "America/Detroit"
+
+service:
+  type: ClusterIP
+  port: 11080
+  securePort: 9443
+
+podAnnotations: {}
+podLabels: {}
+
+# if using host network (recommended), combine with nodeAffinity below
+hostNetwork: true
+# supply a node selector to run on a specific node
+# nodeAffinity:
+#   requiredDuringSchedulingIgnoredDuringExecution:
+#     nodeSelectorTerms:
+#     # looks for a node with the label smarthome=scrypted
+#     - matchExpressions:
+#       - key: smarthome
+#         operator: In
+#         values:
+#         - scrypted
+
+ingress:
+  enabled: true
+  annotations:
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    # nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    # nginx.ingress.kubernetes.io/server-snippets: |
+    #   location / {
+    #     proxy_set_header Upgrade $http_upgrade;
+    #     proxy_http_version 1.1;
+    #     proxy_set_header X-Forwarded-Host $http_host;
+    #     proxy_set_header X-Forwarded-Proto $scheme;
+    #     proxy_set_header X-Forwarded-For $remote_addr;
+    #     proxy_set_header Host $host;
+    #     proxy_set_header Connection "upgrade";
+    #     proxy_set_header X-Real-IP $remote_addr;
+    #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    #     proxy_set_header   Upgrade $http_upgrade;
+    #     proxy_cache_bypass $http_upgrade;
+    #   }
+  # supply a host name to use for the ingress
+  hosts:
+    - host: scrypted.local
+      paths: ["/"]
+
+# recommended to use a persistent volume provider like NFS or Longhorn
+persistence:
+  enabled: false
+#  storageClass: "longhorn"
+#  accessMode: ReadWriteMany
+#  size: 1Gi
+
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 5
